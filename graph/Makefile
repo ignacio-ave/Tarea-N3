@@ -1,17 +1,15 @@
 # Variables
 CC = gcc
 CFLAGS = -Wall -std=c11
-OBJS = main.o file_io.o graph.o list_node.o priority_queue.o task.o
+OBJS = main.o  graph.o list_node.o priority_queue.o task.o
 
 # Regla por defecto
 all: program
 
 # Reglas de compilación
-main.o: main.c file_io.h graph.h list_node.h priority_queue.h task.h
+main.o: main.c graph.h list_node.h priority_queue.h task.h
 	$(CC) $(CFLAGS) -c main.c
 
-file_io.o: file_io.c file_io.h
-	$(CC) $(CFLAGS) -c file_io.c
 
 graph.o: graph.c graph.h list_node.h task.h
 	$(CC) $(CFLAGS) -c graph.c
