@@ -6,7 +6,6 @@
 #include <string.h>
 
 Graph* create_graph(int num_vertices);
-void add_edge(Graph* graph, int src, int dest);
 void delete_graph(Graph* graph);
 void display_graph(Graph* graph);
 
@@ -35,12 +34,7 @@ Graph* create_graph(int num_tasks){
 
 
 
-void add_edge(Graph* graph, int src, int dest){
-    ListNode* node = (ListNode*) malloc(sizeof(ListNode));
-    node->task = dest;
-    node->next = graph->adj_lists[src];
-    graph->adj_lists[src] = node;
-}
+
 
 
 void delete_graph(Graph* graph){
@@ -61,7 +55,7 @@ void display_graph(Graph* graph){
         ListNode* current = graph->adj_lists[i];
         printf("%d: ", i);
         while(current != NULL){
-            printf("%d -> ", current->task);
+            printf("%s -> ", current->task->name);
             current = current->next;
         }
         printf("NULL\n");

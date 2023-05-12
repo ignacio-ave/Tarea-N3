@@ -1,5 +1,4 @@
-// Creado por Ignacio Astorga  12/05/2023
-//
+
 #include "task.h"
 #include "priority_queue.h"
 #include <stdio.h>
@@ -12,7 +11,7 @@ PriorityQueue* create_priority_queue(int capacity){
     PriorityQueue* queue = (PriorityQueue*) malloc(sizeof(PriorityQueue));
     queue->capacity = capacity;
     queue->size = 0;
-    queue->heap = (Task**) malloc(capacity * sizeof(Task*));
+    queue->tasks = (Task**) malloc(capacity * sizeof(Task*));
     return queue;
 
 }
@@ -22,14 +21,14 @@ void enqueue(PriorityQueue* queue, Task* task){
         return;
     }
     int index = queue->size;
-    queue->heap[index] = task;
+    queue->tasks[index] = task;
     queue->size++;
     while(index > 0){
         int parent_index = (index - 1) / 2;
-        if(queue->heap[index]->priority > queue->heap[parent_index]->priority){
-            Task* aux = queue->heap[index];
-            queue->heap[index] = queue->heap[parent_index];
-            queue->heap[parent_index] = aux;
+        if(queue->tasks[index]->priority > queue->tasks[parent_index]->priority){
+            Task* aux = queue->tasks[index];
+            queue->tasks[index] = queue->tasks[parent_index];
+            queue->tasks[parent_index] = aux;
             index = parent_index;
         }else{
             break;
@@ -41,8 +40,8 @@ Task* dequeue(PriorityQueue* queue){
         printf("Priority queue is empty\n");
         return NULL;
     }
-    Task* task = queue->heap[0];
-    queue->heap[0] = queue->heap[queue->size - 1];
+    Task* task = queue->tasks[0];
+    queue->tasks[0] = queue->tasks[queue->size - 1];
     queue->size--;
     int index = 0;
     while(index < queue->size){
@@ -53,14 +52,14 @@ Task* dequeue(PriorityQueue* queue){
         }
         int max_child_index = left_child_index;
         if(right_child_index < queue->size){
-            if(queue->heap[right_child_index]->priority > queue->heap[left_child_index]->priority){
+            if(queue->tasks[right_child_index]->priority > queue->tasks[left_child_index]->priority){
                 max_child_index = right_child_index;
             }
         }
-        if(queue->heap[index]->priority < queue->heap[max_child_index]->priority){
-            Task* aux = queue->heap[index];
-            queue->heap[index] = queue->heap[max_child_index];
-            queue->heap[max_child_index] = aux;
+        if(queue->tasks[index]->priority < queue->tasks[max_child_index]->priority){
+            Task* aux = queue->tasks[index];
+            queue->tasks[index] = queue->tasks[max_child_index];
+            queue->tasks[max_child_index] = aux;
             index = max_child_index;
         }else{
             break;
@@ -73,9 +72,9 @@ Task* peek(PriorityQueue* queue){
         printf("Priority queue is empty\n");
         return NULL;
     }
-    return queue->heap[0];
+    return queue->tasks[0];
 }
 void delete_priority_queue(PriorityQueue* queue){
-    free(queue->heap);
+    free(queue->tasks);
     free(queue);
 }

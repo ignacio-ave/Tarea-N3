@@ -1,16 +1,15 @@
+// Creado por Ignacio Astorga  12/05/2023
+// //
 
-
-#include "graph.h"
-#include "list_node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "priority_queue.h"
 #include "task.h"
-#include "task.c"
-#include "graph.c"
-#include "list_node.c"
-#include "priority_queue.c"
+#include "list_node.h"
+#include "graph.h"
+#include "priority_queue.h"
+
+
 
 
 
@@ -53,23 +52,6 @@ typedef struct {
 
 
 */
-// Cabeceras de las funciones
-
-void add_task(Graph* graph, char* task_name, char* task_description, int task_priority);   
-
-
-
-
-
-
-
-void set_precedence(Graph* graph, char* task1_name, char* task2_name);
-void show_tasks(Graph* graph);
-void complete_task(Graph* graph, char* task_name);
-void undo_last_action(Graph* graph);
-void load_tasks_from_file_graph(Graph* graph, char* filename);
-
-
 
 
 
@@ -215,16 +197,16 @@ int main() {
         scanf("%d", &choice);
         char name[50], name2[50], filename[50];
         int priority;
-        Task* task;
 
         switch(choice) {
             case 1:
                 printf("Nombre de la tarea: ");
                 scanf("%s", name);
+                printf("Descripción de la tarea: ");
+                scanf("%s", name2);
                 printf("Prioridad de la tarea: ");
                 scanf("%d", &priority);
-                task = create_task(name, "", priority, 0, NULL);
-                add_task(graph, task, "Descripción", 0);
+                add_task(graph, name, name2, priority);
                 break;
             case 2:
                 printf("Nombre de la primera tarea: ");
@@ -247,7 +229,7 @@ int main() {
             case 6:
                 printf("Nombre del archivo: ");
                 scanf("%s", filename);
-                load_tasks_from_file_graph(graph, filename);
+                load_tasks_from_file(graph, filename);
                 break;
             case 7:
                 printf("Saliendo...\n");

@@ -3,15 +3,11 @@
 
 #include "task.h"
 
+
 typedef struct ListNode {
     Task* task;
     struct ListNode* next;
-    struct ListNode* prev;
-    struct ListNode* head;
-    struct ListNode* tail;
-
 } ListNode;
-
 
 ListNode* create_list_node(Task* task);
 void delete_list_node(ListNode* node);

@@ -6,7 +6,7 @@
 typedef struct {
     int num_vertices;
     ListNode** adj_lists;
-        
+
 } Graph;
 
 Graph* create_graph(int num_vertices);

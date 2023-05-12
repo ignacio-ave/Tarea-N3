@@ -4,11 +4,11 @@
 #include "task.h"
 
 typedef struct {
-    Task** heap;
+    Task** tasks;
     int capacity;
     int size;
-    PriorityQueue* head;
 } PriorityQueue;
+
 
 PriorityQueue* create_priority_queue(int capacity);
 void enqueue(PriorityQueue* queue, Task* task);
