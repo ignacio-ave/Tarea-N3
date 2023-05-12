@@ -60,7 +60,7 @@ void set_precedence(Graph* graph, char* task1_name, char* task2_name);
 void show_tasks(Graph* graph);
 void complete_task(Graph* graph, char* task_name);
 void undo_last_action(Graph* graph);
-void load_tasks_from_file(Graph* graph, char* filename);
+void load_tasks_from_file_graph(Graph* graph, char* filename);
 
 Graph* create_graph(int num_tasks){
     Graph* graph = malloc(sizeof(Graph));
@@ -174,7 +174,7 @@ void undo_last_action(Graph* graph){
     free(node);
 }
 // 6. Cargar datos de tareas desde un archivo de texto (nombre_archivo): La aplicación carga los datos de las tareas pendientes desde un archivo de texto indicado por la usuaria.
-void load_tasks_from_file(Graph* graph, char* filename){
+void load_tasks_from_file_graph(Graph* graph, char* filename){
     FILE* file = fopen(filename, "r");
     if(file == NULL){
         printf("Error: no se pudo abrir el archivo\n");
@@ -245,7 +245,7 @@ int main() {
             case 6:
                 printf("Nombre del archivo: ");
                 scanf("%s", filename);
-                load_tasks_from_file(graph, filename);
+                load_tasks_from_file_graph(graph, filename);
                 break;
             case 7:
                 printf("Saliendo...\n");
