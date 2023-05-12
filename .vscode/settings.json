@@ -4,6 +4,7 @@
         "vector": "c",
         "task.h": "c",
         "priority_queue.h": "c",
-        "graph.h": "c"
+        "graph.h": "c",
+        "string.h": "c"
     }
 }
