@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "vector": "c",
+        "task.h": "c",
+        "priority_queue.h": "c"
+    }
+}

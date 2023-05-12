@@ -1,96 +1,132 @@
-/*
-Objetivos
-● Uso de TDAs en el lenguaje de programación C.
-● Diseñar y proponer una solución eficiente para el problema planteado.
+// Creado por Ignacio Astorga  12/05/2023
+// //
+//
 
-*/
+#include "file_io.h"
+#include "graph.h"
+#include "list_node.h"
+#include "priority_queue.h"
+#include "task.h"
 
-/*
-En esta actividad, se desea crear una aplicación para organizar tareas por hacer. 
-La aplicación permitirá a los/las usuarios/as agregar tareas, establecer relaciones de precedencia entre ellas (una tarea debe realizarse antes que otra) y prioridades.
-*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/*
 
-Ejemplo de formato de archivo de entrada/salida:
-
-Nombre, Prioridad, TareasPrecedentes
-TareaA, 3,
-TareaB, 2, TareaA
-TareaC, 4, TareaB
-TareaD, 1,
-TareaE, 5, TareaD
-...
-
-*/
 
 /*
-En este archivo, cada línea representa una tarea y los campos están separados por comas. 
-El primer campo indica el nombre de la tarea, el segundo campo indica la prioridad de la tarea (un número entero) y el tercer campo indica las tareas precedentes, separadas por espacios.
+// Definición de la estructura de una tarea
+typedef struct Task {
+    char* name;
+    char* description;
+    int priority;
+    struct Task** precedents;  // Lista de tareas precedentes
+    int num_precedents;       // Número de tareas precedentes
+} Task;
+// Defincion de la estructura priority queue
 
-*/
-
-/*
-
-Se propone el siguiente menú para la aplicación:
-
-
-*/
-# incluide <stdio.h>
-# incluide <stdlib.h>
-# incluide <string.h>
-
-#define MAX_NAME_LENGTH 50
-#define MAX_TASKS 100
-
-// Estructura para la tarea
 typedef struct {
-    char nombre[MAX_NAME_LENGTH];
-    int prioridad;
-    int completada;
-    int num_precedentes;
-    char precedentes[MAX_TASKS][MAX_NAME_LENGTH];
-} Tarea;
+    Task** heap;
+    int capacity;
+    int size;
+    PriorityQueue* head;
+} PriorityQueue;
 
-// Estructura para el grafo
+// Definición de la estructura de un nodo de lista
+
+typedef struct ListNode {
+    Task* task;
+    struct ListNode* next;
+    struct ListNode* prev;
+    struct ListNode* head;
+    struct ListNode* tail;
+
+} ListNode;
+
+
+// Definición de la estructura de un grafo
 typedef struct {
-    int num_tareas;
-    Tarea tareas[MAX_TASKS];
-} Grafo;
-
-// Estructura para la pila de acciones
-typedef struct {
-    int top;
-    char acciones[MAX_TASKS][MAX_NAME_LENGTH];
-} Pila;
+    int num_vertices;
+    ListNode** adj_lists;
+} Graph;
 
 
-
-
-/*
-typedef struct NodoB {
-    int *claves;
-    struct NodoB **hijos;
-    struct NodoB *hermanoDerecho;
-    int numClaves;
-    bool esHoja;
-} NodoB;
-
-// Estructura del árbol B+
-typedef struct ArbolB {
-    NodoB *raiz;
-    int orden;
-} ArbolB;
 
 */
+// Cabeceras de las funciones
+Graph* create_graph(int num_tasks);
+void add_task(Graph* graph, Task* task);
+void set_precedence(Graph* graph, char* task1_name, char* task2_name);
+void show_tasks(Graph* graph);
+void complete_task(Graph* graph, char* task_name);
+void undo_last_action(Graph* graph);
+void load_tasks_from_file(Graph* graph, char* filename);
+
+Graph* create_graph(int num_tasks){
+    Graph* graph = malloc(sizeof(Graph));
+    graph->num_vertices = num_tasks;
+    graph->adj_lists = malloc(num_tasks * sizeof(ListNode*));
+    for(int i = 0; i < num_tasks; i++){
+        graph->adj_lists[i] = NULL;
+    }
+    return graph;
+
+}
+
+
+
 
 
 
 //1. Agregar tarea (nombre, prioridad): La usuaria ingresa el nombre de una tarea y su prioridad (un número entero). La aplicación agrega la tarea a la lista de tareas por hacer.
+void add_task(Graph* graph, Task* task){
+    ListNode* node = create_list_node(task);
+    int index = graph->num_vertices;
+    graph->adj_lists[index] = node;
+    graph->num_vertices++;
+}
+
 
 //2. Establecer precedencia entre tareas (tarea1, tarea2): La usuaria ingresa los nombres de dos tareas existentes. La aplicación establece que la tarea1 debe realizarse antes que la tarea2.
-
+void set_precedence(Graph* graph, char* task1_name, char* task2_name){
+    int index1 = -1;
+    int index2 = -1;
+    for(int i = 0; i < graph->num_vertices; i++){
+        if(strcmp(graph->adj_lists[i]->task->name, task1_name) == 0){
+            index1 = i;
+        }
+        if(strcmp(graph->adj_lists[i]->task->name, task2_name) == 0){
+            index2 = i;
+        }
+    }
+    if(index1 == -1 || index2 == -1){
+        printf("Error: no se encontró la tarea\n");
+        return;
+    }
+    ListNode* node = graph->adj_lists[index2];
+    node->next = graph->adj_lists[index1];
+    graph->adj_lists[index2] = node;
+}
 //3. Mostrar tareas por hacer: La aplicación muestra todas las tareas pendientes, ordenadas según su prioridad y teniendo en cuenta las relaciones de precedencia.
+void show_tasks(Graph* graph){
+    PriorityQueue* queue = create_priority_queue(graph->num_vertices);
+    for(int i = 0; i < graph->num_vertices; i++){
+        ListNode* node = graph->adj_lists[i];
+        Task* task = node->task;
+        enqueue(queue, task);
+    }
+    while(queue->size > 0){
+        Task* task = dequeue(queue);
+        printf("%s (Prioridad: %d)\n", task->name, task->priority);
+        if(task->num_precedents > 0){
+            printf("Precedentes: ");
+            for(int i = 0; i < task->num_precedents; i++){
+                printf("%s ", task->precedents[i]->name);
+            }
+            printf("\n");
+        }
+    }
+}
 
 /*
 Tareas por hacer, ordenadas por prioridad y precedencia:
@@ -105,8 +141,120 @@ En este ejemplo de salida, las tareas se enumeran en el orden en que deben reali
 */
 
 //4. Marcar tarea como completada (nombre): La usuaria ingresa el nombre de una tarea. La aplicación marca la tarea como completada y la elimina de la lista de tareas por hacer. Si la tarea tiene relaciones de precedencia, se debe colocar una advertencia: “¿estás seguro que desea eliminar la tarea?”
-
+void complete_task(Graph* graph, char* task_name){
+    int index = -1;
+    for(int i = 0; i < graph->num_vertices; i++){
+        if(strcmp(graph->adj_lists[i]->task->name, task_name) == 0){
+            index = i;
+        }
+    }
+    if(index == -1){
+        printf("Error: no se encontró la tarea\n");
+        return;
+    }
+    ListNode* node = graph->adj_lists[index];
+    if(node->next != NULL){
+        printf("¿Estás seguro que deseas eliminar la tarea?\n");
+        return;
+    }
+    graph->adj_lists[index] = NULL;
+    free(node);
+    graph->num_vertices--;
+}
 //5. Deshacer última acción: La aplicación deshace la última acción realizada por la usuaria, ya sea agregar/eliminar una tarea, establecer precedencia o marcar una tarea como completada. Si no hay acciones que deshacer, se debe mostrar un aviso.
 
-//
-6. Cargar datos de tareas desde un archivo de texto (nombre_archivo): La aplicación carga los datos de las tareas pendientes desde un archivo de texto indicado por la usuaria.
+void undo_last_action(Graph* graph){
+    if(graph->num_vertices == 0){
+        printf("No hay acciones que deshacer\n");
+        return;
+    }
+    graph->num_vertices--;
+    ListNode* node = graph->adj_lists[graph->num_vertices];
+    graph->adj_lists[graph->num_vertices] = NULL;
+    free(node);
+}
+// 6. Cargar datos de tareas desde un archivo de texto (nombre_archivo): La aplicación carga los datos de las tareas pendientes desde un archivo de texto indicado por la usuaria.
+void load_tasks_from_file(Graph* graph, char* filename){
+    FILE* file = fopen(filename, "r");
+    if(file == NULL){
+        printf("Error: no se pudo abrir el archivo\n");
+        return;
+    }
+    char line[100];
+    while(fgets(line, 100, file)){
+        char* name = strtok(line, ",");
+        char* priority_str = strtok(NULL, ",");
+        int priority = atoi(priority_str);
+        //Task* create_task(char* title, char* description, int priority, int num_precedents, Task** precedents);
+        Task* task = create_task(name, "", priority, 0, NULL);
+        add_task(graph, task);
+    }
+    fclose(file);
+}
+
+
+int main() {
+    // Crear un grafo vacío
+    Graph* graph = create_graph(0);
+
+    // Mostrar el menú de la aplicación
+    while(1) {
+        printf("\nMenu:\n");
+        printf("1. Agregar tarea\n");
+        printf("2. Establecer precedencia\n");
+        printf("3. Mostrar tareas\n");
+        printf("4. Completar tarea\n");
+        printf("5. Deshacer última acción\n");
+        printf("6. Cargar tareas desde archivo\n");
+        printf("7. Salir\n");
+        printf("Elige una opción: ");
+
+        int choice;
+        scanf("%d", &choice);
+        char name[50], name2[50], filename[50];
+        int priority;
+        Task* task;
+
+        switch(choice) {
+            case 1:
+                printf("Nombre de la tarea: ");
+                scanf("%s", name);
+                printf("Prioridad de la tarea: ");
+                scanf("%d", &priority);
+                task = create_task(name, "", priority, 0, NULL);
+                add_task(graph, task);
+                break;
+            case 2:
+                printf("Nombre de la primera tarea: ");
+                scanf("%s", name);
+                printf("Nombre de la segunda tarea: ");
+                scanf("%s", name2);
+                set_precedence(graph, name, name2);
+                break;
+            case 3:
+                show_tasks(graph);
+                break;
+            case 4:
+                printf("Nombre de la tarea: ");
+                scanf("%s", name);
+                complete_task(graph, name);
+                break;
+            case 5:
+                undo_last_action(graph);
+                break;
+            case 6:
+                printf("Nombre del archivo: ");
+                scanf("%s", filename);
+                load_tasks_from_file(graph, filename);
+                break;
+            case 7:
+                printf("Saliendo...\n");
+                free(graph);
+                return 0;
+            default:
+                printf("Opción inválida. Por favor, intenta de nuevo.\n");
+        }
+    }
+
+    return 0;
+}
