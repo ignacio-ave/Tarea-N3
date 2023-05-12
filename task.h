@@ -1,7 +1,6 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include "list_node.h"
 
 typedef struct Task {
     char* name;
@@ -14,5 +13,6 @@ typedef struct Task {
 Task* create_task(char* title, char* description, int priority, int num_precedents, Task** precedents);
 void delete_task(Task* task);
 void display_task(Task* task);
+
 
 #endif // TASK_H

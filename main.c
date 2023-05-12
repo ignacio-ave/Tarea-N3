@@ -1,16 +1,16 @@
-// Creado por Ignacio Astorga  12/05/2023
-// //
-//
 
-#include "file_io.h"
+
 #include "graph.h"
 #include "list_node.h"
-#include "priority_queue.h"
-#include "task.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "priority_queue.h"
+#include "task.h"
+#include "task.c"
+#include "graph.c"
+#include "list_node.c"
+#include "priority_queue.c"
 
 
 
@@ -26,7 +26,7 @@ typedef struct Task {
 // Defincion de la estructura priority queue
 
 typedef struct {
-    Task** heap;
+    Task** tasks;
     int capacity;
     int size;
     PriorityQueue* head;
@@ -54,24 +54,21 @@ typedef struct {
 
 */
 // Cabeceras de las funciones
-Graph* create_graph(int num_tasks);
-void add_task(Graph* graph, Task* task);
+
+void add_task(Graph* graph, char* task_name, char* task_description, int task_priority);   
+
+
+
+
+
+
+
 void set_precedence(Graph* graph, char* task1_name, char* task2_name);
 void show_tasks(Graph* graph);
 void complete_task(Graph* graph, char* task_name);
 void undo_last_action(Graph* graph);
 void load_tasks_from_file_graph(Graph* graph, char* filename);
 
-Graph* create_graph(int num_tasks){
-    Graph* graph = malloc(sizeof(Graph));
-    graph->num_vertices = num_tasks;
-    graph->adj_lists = malloc(num_tasks * sizeof(ListNode*));
-    for(int i = 0; i < num_tasks; i++){
-        graph->adj_lists[i] = NULL;
-    }
-    return graph;
-
-}
 
 
 
@@ -79,11 +76,18 @@ Graph* create_graph(int num_tasks){
 
 
 //1. Agregar tarea (nombre, prioridad): La usuaria ingresa el nombre de una tarea y su prioridad (un número entero). La aplicación agrega la tarea a la lista de tareas por hacer.
-void add_task(Graph* graph, Task* task){
+void add_task(Graph* graph, char* task_name, char* task_description, int task_priority){
+    Task* task = create_task(task_name, task_description, task_priority, 0, NULL);
     ListNode* node = create_list_node(task);
-    int index = graph->num_vertices;
-    graph->adj_lists[index] = node;
-    graph->num_vertices++;
+    ListNode* current = graph->adj_lists[0];
+    if(current == NULL){
+        graph->adj_lists[0] = node;
+        return;
+    }
+    while(current->next != NULL){
+        current = current->next;
+    }
+    current->next = node;
 }
 
 
@@ -174,7 +178,7 @@ void undo_last_action(Graph* graph){
     free(node);
 }
 // 6. Cargar datos de tareas desde un archivo de texto (nombre_archivo): La aplicación carga los datos de las tareas pendientes desde un archivo de texto indicado por la usuaria.
-void load_tasks_from_file_graph(Graph* graph, char* filename){
+void load_tasks_from_file(Graph* graph, char* filename){
     FILE* file = fopen(filename, "r");
     if(file == NULL){
         printf("Error: no se pudo abrir el archivo\n");
@@ -182,16 +186,14 @@ void load_tasks_from_file_graph(Graph* graph, char* filename){
     }
     char line[100];
     while(fgets(line, 100, file)){
-        char* name = strtok(line, ",");
-        char* priority_str = strtok(NULL, ",");
-        int priority = atoi(priority_str);
-        //Task* create_task(char* title, char* description, int priority, int num_precedents, Task** precedents);
-        Task* task = create_task(name, "", priority, 0, NULL);
-        add_task(graph, task);
+        char* task_name = strtok(line, ",");
+        char* task_description = strtok(NULL, ",");
+        char* task_priority_str = strtok(NULL, ",");
+        int task_priority = atoi(task_priority_str);
+        add_task(graph, task_name, task_description, task_priority);
     }
     fclose(file);
 }
-
 
 int main() {
     // Crear un grafo vacío
@@ -222,7 +224,7 @@ int main() {
                 printf("Prioridad de la tarea: ");
                 scanf("%d", &priority);
                 task = create_task(name, "", priority, 0, NULL);
-                add_task(graph, task);
+                add_task(graph, task, "Descripción", 0);
                 break;
             case 2:
                 printf("Nombre de la primera tarea: ");

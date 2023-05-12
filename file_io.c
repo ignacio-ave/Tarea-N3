@@ -1,14 +1,13 @@
-// Creado por Ignacio Astorga  12/05/2023
-//
 
 #include "file_io.h"
 #include "priority_queue.h"
-#include "task.h"
 #include "list_node.h"
-
+#include "task.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 
 
 void save_tasks_to_file(char* filename, PriorityQueue* queue){
@@ -17,7 +16,7 @@ void save_tasks_to_file(char* filename, PriorityQueue* queue){
         printf("Error al abrir el archivo\n");
         return;
     }
-    ListNode* current = queue->head;
+    ListNode* current = queue->tasks[0];
     while(current != NULL){
         fprintf(file, "%s\n", current->task->name);
         current = current->next;

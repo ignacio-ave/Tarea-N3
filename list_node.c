@@ -1,11 +1,11 @@
-// Creado por Ignacio Astorga  12/05/2023
-//
 
-#include "task.h"
 #include "list_node.h"
+#include "task.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 
 // Crea un nodo de lista
 ListNode* create_list_node(Task* task){

@@ -1,10 +1,10 @@
-// Creado por Ignacio Astorga  12/05/2023
-//
+
 #include "task.h"
-#include "list_node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 
 
 Task* create_task(char* title, char* description, int priority, int num_precedents, Task** precedents){

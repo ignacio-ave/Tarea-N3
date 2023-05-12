@@ -1,13 +1,9 @@
-// Creado por Ignacio Astorga  12/05/2023
-//
 
-
+#include "graph.h"
+#include "list_node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "graph.h"
-#include "list_node.h"
-
 
 Graph* create_graph(int num_vertices);
 void add_edge(Graph* graph, int src, int dest);
@@ -24,7 +20,18 @@ Graph *create_graph(int num_vertices){
     }
     return graph;
 }
+/*
+Graph* create_graph(int num_tasks){
+    Graph* graph = malloc(sizeof(Graph));
+    graph->num_vertices = num_tasks;
+    graph->adj_lists = malloc(num_tasks * sizeof(ListNode*));
+    for(int i = 0; i < num_tasks; i++){
+        graph->adj_lists[i] = NULL;
+    }
+    return graph;
 
+}
+*/
 
 
 
@@ -33,8 +40,9 @@ void add_edge(Graph* graph, int src, int dest){
     node->task = dest;
     node->next = graph->adj_lists[src];
     graph->adj_lists[src] = node;
-
 }
+
+
 void delete_graph(Graph* graph){
     for(int i = 0; i < graph->num_vertices; i++){
         ListNode* current = graph->adj_lists[i];
