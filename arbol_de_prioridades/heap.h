@@ -12,6 +12,7 @@ typedef struct Heap{
   int capac;
 } Heap;
 
+void swap(heapElem* a, heapElem* b);
 Heap* createHeap();
 void* heap_top(Heap* pq);
 void heap_push(Heap* pq, void* data, int priority);
