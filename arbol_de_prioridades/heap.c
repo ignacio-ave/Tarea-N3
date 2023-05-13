@@ -129,3 +129,14 @@ Heap* createHeap(){
    nuevo->capac = 3;
    return nuevo;
 }
+
+void destroyHeap(Heap* heap) {
+    if (heap == NULL) {
+        return;
+    }
+    if (heap->heapArray != NULL) {
+        free(heap->heapArray);  // Liberamos el array de elementos
+    }
+    free(heap);  // Finalmente liberamos la estructura del heap
+}
+

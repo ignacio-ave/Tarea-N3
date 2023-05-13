@@ -224,3 +224,34 @@ Pair *nextMap(HashMap *map) {
   }
   return NULL;
 }
+
+void destroyMap(HashMap* map) {
+    // Verificar que el mapa no sea NULL
+    if (map == NULL) {
+        return;
+    }
+
+    // Recorrer cada bucket
+    for (int i = 0; i < map->capacity; i++) {
+        Pair* pair = map->buckets[i];
+        // Liberar cada par dentro del bucket
+        if (pair != NULL) {
+            // Liberar la llave
+            if (pair->key != NULL) {
+                free(pair->key);
+            }
+            // Liberar el valor
+            if (pair->value != NULL) {
+                free(pair->value);
+            }
+            // Liberar el par
+            free(pair);
+        }
+    }
+
+    // Liberar el arreglo de buckets
+    free(map->buckets);
+
+    // Finalmente, liberar el mapa mismo
+    free(map);
+}

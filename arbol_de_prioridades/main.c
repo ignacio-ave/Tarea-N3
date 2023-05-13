@@ -42,6 +42,13 @@ void heap_push(Heap* pq, void* data, int priority);
 void heap_pop(Heap* pq);
 
 */
+// Cabecera de funciones
+void agregarTarea(Heap* heap, HashMap* map, char* nombre, int prioridad);
+void establecerPrecedencia(HashMap* map, char* tarea1, char* tarea2);
+void mostrarTareas(Heap* heap);
+void eliminarPrecedente(HashMap* map, char* nombre);
+void marcarTareaComoCompletada(Heap* heap, HashMap* map, char* nombre);
+
 
 typedef struct Tarea {
     char nombre[50];
@@ -116,6 +123,7 @@ void eliminarPrecedente(HashMap* map, char* nombre) {
         pair = nextMap(map);
     }
 }
+
 void heap_eliminar(Heap* pq, void* data) {
     int i;
     for(i = 0; i < pq->size; i++) {
@@ -124,18 +132,19 @@ void heap_eliminar(Heap* pq, void* data) {
         }
     }
     if(i == pq->size) {
-        // Element not found, return without doing anything
+        // Elemento no encontrado en el heap
         return;
     }
 
-    // Move the last element to the position of the removed element
+    // Mover el último elemento al lugar del elemento a eliminar
     pq->heapArray[i] = pq->heapArray[pq->size - 1];
     pq->size--;
 
-    // Reorder the heap
+    // Reordenar el heap
     int parent = i;
     int child = 2 * parent + 1;
     while(child < pq->size) {
+        
         if(child + 1 < pq->size && pq->heapArray[child].priority < pq->heapArray[child + 1].priority) {
             child++;
         }
@@ -160,7 +169,7 @@ void marcarTareaComoCompletada(Heap* heap, HashMap* map, char* nombre) {
         if(respuesta == 'S' || respuesta == 's') {
             eliminarPrecedente(map, nombre);
             eraseMap(map, nombre);
-            heap_eliminar(heap, tarea);  // New line
+            heap_eliminar(heap, tarea);  
         }
     }
 }
@@ -170,37 +179,72 @@ void marcarTareaComoCompletada(Heap* heap, HashMap* map, char* nombre) {
 
 // 5. Deshacer última acción: La aplicación deshace la última acción realizada por la usuaria, ya sea agregar/eliminar una tarea, establecer precedencia o marcar una tarea como completada. Si no hay acciones que deshacer, se debe mostrar un aviso.
 
+
 // 6. Cargar datos de tareas desde un archivo de texto (nombre_archivo): La aplicación carga los datos de las tareas pendientes desde un archivo de texto indicado por la usuaria.
+
+
 
 int main() {
     Heap* heap = createHeap();
     HashMap* map = createMap(100);
     
-    agregarTarea(heap, map, "Tarea 1", 1);
-    agregarTarea(heap, map, "Tarea 2", 2);
-    agregarTarea(heap, map, "Tarea 3", 3);
-    agregarTarea(heap, map, "Tarea 4", 4);
-    agregarTarea(heap, map, "Tarea 5", 5);
-    agregarTarea(heap, map, "Tarea 6", 6);
-    agregarTarea(heap, map, "Tarea 7", 7);
-    agregarTarea(heap, map, "Tarea 8", 8);
-    agregarTarea(heap, map, "Tarea 9", 9);
-    agregarTarea(heap, map, "Tarea 10", 10);
+    // Variables que necesitaremos
+    char nombre[50];
+    char tarea1[50];
+    char tarea2[50];
+    int opcion, prioridad;
     
-    establecerPrecedencia(map, "Tarea 1", "Tarea 2");
-    establecerPrecedencia(map, "Tarea 1", "Tarea 3");
-    establecerPrecedencia(map, "Tarea 2", "Tarea 4");
-    establecerPrecedencia(map, "Tarea 2", "Tarea 5");
-    establecerPrecedencia(map, "Tarea 3", "Tarea 6");
-    establecerPrecedencia(map, "Tarea 3", "Tarea 7");
-    establecerPrecedencia(map, "Tarea 4", "Tarea 8");
-    establecerPrecedencia(map, "Tarea 4", "Tarea 9");
-    establecerPrecedencia(map, "Tarea 5", "Tarea 10");
-    establecerPrecedencia(map, "Tarea 6", "Tarea 10");
-    mostrarTareas(heap);
-    
-    marcarTareaComoCompletada(heap, map, "Tarea 1");
-    mostrarTareas(heap);
+    do {
+        printf("\n╭──────────────────────────────────────────────────────────╮");
+        printf("\n│                     MENU PRINCIPAL                       │");
+        printf("\n├──────────────────────────────────────────────────────────┤");
+        printf("\n│ 1. Agregar tarea                                         │");
+        printf("\n│ 2. Mostrar tareas                                        │");
+        printf("\n│ 3. Establecer precedencia entre dos tareas               │");
+        printf("\n│ 4. Eliminar precedente de una tarea                      │");
+        printf("\n│ 5. Marcar tarea como completada                          │");
+        printf("\n│ 0. Salir                                                 │");
+        printf("\n╰──────────────────────────────────────────────────────────╯");
+        printf("\n\nIngrese una opción: ");
+        scanf("%d", &opcion);
+        switch (opcion) {
+            case 1:
+                printf("Ingrese el nombre de la tarea: ");
+                scanf("%s", nombre);
+                printf("Ingrese la prioridad de la tarea: ");
+                scanf("%d", &prioridad);
+                agregarTarea(heap, map, nombre, prioridad);
+                break;
+            case 2:
+                mostrarTareas(heap);
+                break;
+            case 3:
+                printf("Ingrese el nombre de la tarea 1: ");
+                scanf("%s", tarea1);
+                printf("Ingrese el nombre de la tarea 2: ");
+                scanf("%s", tarea2);
+                establecerPrecedencia(map, tarea1, tarea2);
+                break;
+            case 4:
+                printf("Ingrese el nombre de la tarea: ");
+                scanf("%s", nombre);
+                eliminarPrecedente(map, nombre);
+                break;
+            case 5:
+                printf("Ingrese el nombre de la tarea a marcar como completada: ");
+                scanf("%s", nombre);
+                marcarTareaComoCompletada(heap, map, nombre);
+                break;
+            case 0:
+                printf("Saliendo del programa...");
+                break;
+            default:
+                printf("Opción no válida. Por favor, intente de nuevo.\n");
+        }
+    } while (opcion != 0);
+
+    destroyHeap(heap);
+    destroyMap(map);
 
     return 0;
 }
