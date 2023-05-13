@@ -5,16 +5,6 @@
 #include <ctype.h>
 #include "heap.h"
 
-typedef struct nodo{
-   void* data;
-   int priority;
-}heapElem;
-
-typedef struct Heap{
-  heapElem* heapArray;
-  int size;
-  int capac;
-} Heap;
 
 
 // Implementación de funciones auxiliares

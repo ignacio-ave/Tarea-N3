@@ -1,7 +1,16 @@
 #ifndef Heap_h
 #define Heap_h
 
-typedef struct Heap Heap;
+typedef struct nodo{
+   void* data;
+   int priority;
+}heapElem;
+
+typedef struct Heap{
+  heapElem* heapArray;
+  int size;
+  int capac;
+} Heap;
 
 Heap* createHeap();
 void* heap_top(Heap* pq);
