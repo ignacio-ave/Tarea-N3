@@ -193,6 +193,50 @@ int main() {
     char tarea1[50];
     char tarea2[50];
     int opcion, prioridad;
+
+
+    // Inicializar tareas previamente
+    
+    agregarTarea(heap, map, "A", 1);
+    agregarTarea(heap, map, "B", 3);
+    establecerPrecedencia(map, "A", "B");
+    agregarTarea(heap, map, "C", 2);
+    establecerPrecedencia(map, "A", "C");
+    agregarTarea(heap, map, "D", 4);
+    establecerPrecedencia(map, "B", "D");
+    establecerPrecedencia(map, "C", "D");
+    agregarTarea(heap, map, "E", 5);
+    establecerPrecedencia(map, "B", "E");
+    agregarTarea(heap, map, "F", 1);
+    agregarTarea(heap, map, "G", 2);
+    establecerPrecedencia(map, "F", "G");
+    agregarTarea(heap, map, "H", 3);
+    establecerPrecedencia(map, "F", "H");
+    agregarTarea(heap, map, "I", 5);
+    establecerPrecedencia(map, "G", "I");
+    establecerPrecedencia(map, "H", "I");
+    agregarTarea(heap, map, "J", 4);
+    establecerPrecedencia(map, "F", "J");
+    agregarTarea(heap, map, "K", 1);
+    agregarTarea(heap, map, "L", 2);
+    establecerPrecedencia(map, "K", "L");
+    agregarTarea(heap, map, "M", 3);
+    establecerPrecedencia(map, "K", "M");
+    agregarTarea(heap, map, "N", 4);
+    establecerPrecedencia(map, "L", "N");
+    establecerPrecedencia(map, "M", "N");
+    agregarTarea(heap, map, "O", 5);
+    establecerPrecedencia(map, "K", "O");
+    agregarTarea(heap, map, "P", 1);
+    agregarTarea(heap, map, "Q", 3);
+    establecerPrecedencia(map, "P", "Q");
+    agregarTarea(heap, map, "R", 2);
+    establecerPrecedencia(map, "P", "R");
+    agregarTarea(heap, map, "S", 5);
+    establecerPrecedencia(map, "Q", "S");
+    establecerPrecedencia(map, "R", "S");
+    agregarTarea(heap, map, "T", 4);
+    establecerPrecedencia(map, "P", "T");
     
     do {
         printf("\n╭──────────────────────────────────────────────────────────╮");
