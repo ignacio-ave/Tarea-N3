@@ -3,6 +3,7 @@
 #include <string.h>
 #include "heap.h"
 #include "hashmap.h"
+#include "stack.h"
 #include <stdbool.h>
 /*
 struct HashMap {
@@ -78,7 +79,18 @@ void establecerPrecedencia(HashMap* map, char* nombreTarea1, char* nombreTarea2)
     if(pairTarea1 && pairTarea2) {
         Tarea* tarea1 = (Tarea*)pairTarea1->value;
         Tarea* tarea2 = (Tarea*)pairTarea2->value;
-        tarea2->precedentes[tarea2->numPrecedentes++] = tarea1;
+        if(tarea2->numPrecedentes < 50) {
+            tarea2->precedentes[tarea2->numPrecedentes++] = tarea1;
+        } else {
+            printf("Error: La tarea %s ya tiene el máximo número de precedentes (50).\n", nombreTarea2);
+        }
+    } else {
+        if(pairTarea1 == NULL) {
+            printf("Error: La tarea %s no se encuentra en el mapa.\n", nombreTarea1);
+        }
+        if(pairTarea2 == NULL) {
+            printf("Error: La tarea %s no se encuentra en el mapa.\n", nombreTarea2);
+        }
     }
 }
 
@@ -103,86 +115,55 @@ void eliminarTarea(Heap* heap, HashMap* map, char* nombre) {
 }
 
 void mostrarTareas(Heap* heap, HashMap* map) {
-    // Creamos una copia del heap y el mapa para no modificar los originales
-    Heap* heapCopia = createHeap();
-    HashMap* mapCopia = createMap(100);
-
-    // Copiar datos al heap y al mapa copia
-    while(heap->size > 0) {
-        Tarea* tarea = heap_top(heap);
-        agregarTarea(heapCopia, mapCopia, tarea->nombre, tarea->prioridad);
-        heap_pop(heap);
-    }
-
     printf("Tareas por hacer, ordenadas por prioridad y precedencia:\n");
     int numeroTarea = 1;
 
-    // Mientras haya tareas en el heap
+    // Crear una copia del heap
+    Heap* heapCopia = createHeap();
+    for(int i = 0; i < heap->size; i++) {
+        heap_push(heapCopia, heap->heapArray[i].data, heap->heapArray[i].priority);
+    }
+
+    // Creamos un stack para las tareas
+    Stack* stack = createStack(heap->size);
+
+    // Mientras haya tareas en el heapCopia
     while(heapCopia->size > 0) {
-        // Buscar la tarea con la prioridad más alta que pueda realizarse
-        Tarea* tarea = NULL;
-        for(int i = 0; i < heapCopia->size; i++) {
-            Tarea* tareaActual = heapCopia->heapArray[i].data;
-            // Comprobar si todos los precedentes de la tareaActual ya han sido realizados
-            bool precedentesRealizados = true;
-            for(int j = 0; j < tareaActual->numPrecedentes; j++) {
-                if(searchMap(mapCopia, tareaActual->precedentes[j]->nombre) != NULL) {
-                    precedentesRealizados = false;
-                    break;
-                }
-            }
-            // Si la tarea puede realizarse y su prioridad es mayor que la de tarea, actualizar tarea
-            if(precedentesRealizados && (tarea == NULL || tareaActual->prioridad < tarea->prioridad)) {
-                tarea = tareaActual;
-            }
-        }
+        // Extraer la tarea con la prioridad más alta
+        Tarea* tarea = heap_top(heapCopia);
+        heap_pop(heapCopia);
+
+        // Empuja la tarea al stack
+        stack_push(stack, tarea);
+    }
+
+    // Mientras el stack no esté vacío
+    while (!stack_isEmpty(stack)) {
+        // Pop la tarea desde el stack
+        Tarea* tarea = stack_top(stack);
+        stack_pop(stack);
 
         // Imprimir tarea
         printf("%d. %s (Prioridad: %d)", numeroTarea++, tarea->nombre, tarea->prioridad);
+        // Si la tarea tiene precedentes, imprimirlos
         if(tarea->numPrecedentes > 0) {
             printf(" - Precedente: ");
             for(int i = 0; i < tarea->numPrecedentes; i++) {
-                printf("%s ", tarea->precedentes[i]->nombre);
+                printf("%s", tarea->precedentes[i]->nombre);
+                if(i < tarea->numPrecedentes - 1) {
+                    printf(", "); // Agrega una coma entre cada precedente, excepto el último
+                }
             }
         }
         printf("\n");
-
-        // Eliminar tarea del heap y del mapa
-        eliminarTarea(heapCopia, mapCopia, tarea->nombre);
     }
 
-    // Liberar memoria del heap y el mapa copia
-    free(heapCopia);
-    free(mapCopia);
+    // Liberar memoria del heap copia y el stack
+    destroyHeap(heapCopia);
+    destroyStack(stack);
 }
 
 
-/*
-void mostrarTareas(Heap* heap) {
-    // Crear un heap auxiliar para no modificar el original
-    Heap* heapAux = createHeap();
-    while(heap->size > 0) {
-        Tarea* tarea = (Tarea*)heap_top(heap);
-        printf("%s (Prioridad: %d)", tarea->nombre, tarea->prioridad);
-
-        printf(" - Precedentes: ");
-        for(int i = 0; i < tarea->numPrecedentes; i++) {
-            printf("%s ", tarea->precedentes[i]->nombre);
-        }
-        printf("\n");
-        heap_push(heapAux, heap_top(heap), tarea->prioridad);
-        heap_pop(heap);
-    }
-    // Restaurar el heap original
-    while(heapAux->size > 0) {
-        heap_push(heap, heap_top(heapAux), ((Tarea*)heap_top(heapAux))->prioridad);
-        heap_pop(heapAux);
-    }
-    free(heapAux);
-}
-
-
-*/
 
 
 
@@ -256,6 +237,27 @@ void marcarTareaComoCompletada(Heap* heap, HashMap* map, char* nombre) {
     }
 }
 
+void ejemplotareas() {
+    // Crear el heap y el hashmap
+    Heap* heap = createHeap();
+    HashMap* map = createMap(100);
+
+    // Crear las tareas
+    agregarTarea(heap, map, "TareaD", 1);
+    agregarTarea(heap, map, "TareaA", 3);
+    agregarTarea(heap, map, "TareaB", 2);
+    agregarTarea(heap, map, "TareaC", 4);
+    agregarTarea(heap, map, "TareaE", 5);
+
+    // Establecer las precedencias
+    establecerPrecedencia(map, "TareaA", "TareaB");
+    establecerPrecedencia(map, "TareaB", "TareaC");
+    establecerPrecedencia(map, "TareaD", "TareaE");
+
+    // Mostrar las tareas
+    mostrarTareas(heap, map);
+    
+}
 
 
 
@@ -270,6 +272,7 @@ int main() {
     char tarea2[50];
     int opcion, prioridad;
 
+    ejemplotareas();
 
     // Inicializar tareas previamente
     
