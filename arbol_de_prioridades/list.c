@@ -3,21 +3,6 @@
 #include <assert.h>
 #include "list.h"
 
-typedef struct Node Node;
-
-struct Node {
-    void * data;
-    Node * next;
-    Node * prev;
-};
-
-struct List {
-    Node * head;
-    Node * tail;
-    Node * current;
-};
-
-typedef List List;
 
 Node * createNode(void * data) {
     Node * new = (Node *)malloc(sizeof(Node));
@@ -138,4 +123,9 @@ void cleanList(List * list) {
     while (list->head != NULL) {
         popFront(list);
     }
+}
+
+void destroyList(List *list) {
+    cleanList(list);  // Limpiar la lista eliminando todos los nodos
+    free(list);       // Liberar la memoria ocupada por la lista
 }

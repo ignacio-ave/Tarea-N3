@@ -173,25 +173,36 @@ void eraseMap(HashMap *map, char *key) {
 
 // Recuerde actualizar el índice current a la posición encontrada. Recuerde que
 // el arreglo es circular.
-Pair *searchMap(HashMap *map, char *key) {
-  if (map == NULL || key == NULL)
-    return NULL;
-  long indicehash = hash(key, map->capacity);
-  for (long i = 0; i < map->capacity; i++) {
-    if (!map->buckets[indicehash] || !map->buckets[indicehash]->key) {
-      return NULL;
-    }
-    if (is_equal(key, map->buckets[indicehash]->key)) {
-      map->current = indicehash;
-      return map->buckets[indicehash];
-    }
-    indicehash++;
-    if (indicehash == map->capacity)
-      indicehash = 0;
-  }
-
-  return NULL;
+void incrementMapIndex(HashMap* map, long* index) {
+    if (map == NULL || index == NULL)
+        return;
+    
+    (*index)++;
+    if (*index >= map->capacity)
+        *index = 0;
 }
+
+
+Pair* searchMap(HashMap* map, char* key) {
+    if (map == NULL || key == NULL)
+        return NULL;
+    long indicehash = hash(key, map->capacity);
+    long originalIndicehash = indicehash;
+    Pair* pair = NULL;
+    while (true) {
+        pair = map->buckets[indicehash];
+        if (pair && pair->key && is_equal(key, pair->key)) {
+            map->current = indicehash;
+            return pair;
+        }
+        incrementMapIndex(map, &indicehash);
+        if (indicehash == originalIndicehash || map->buckets[indicehash] == NULL) {
+            break;
+        }
+    }
+    return NULL;
+}
+
 // 5.- Implemente las funciones para recorrer la estructura: Pair *
 // firstMap(HashMap * map) retorna el primer Pair válido del arreglo buckets.
 // Pair * nextMap(HashMap * map) retorna el siguiente Pair del arreglo buckets a
