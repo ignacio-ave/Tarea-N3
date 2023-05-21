@@ -15,6 +15,33 @@ gcc -o gestorTareas main.c heap.c hashmap.c list.c
 	./gestorTareas
 ```
 
+## Estructuras y algoritmos
+El programa utiliza las siguientes estructuras de datos:
+
+- `Tarea`: Una estructura que representa una tarea con campos como nombre, clave, prioridad, arreglo de tareas precedentes y cantidad de precedentes.
+
+- `Heap`: Una estructura de montículo binario utilizada para mantener las tareas ordenadas por prioridad.
+
+- `HashMap`: Una estructura de mapa hash utilizada para almacenar las tareas y permitir búsquedas eficientes.
+
+- `List`: Una estructura de lista enlazada utilizada para almacenar las tareas que se mostrarán ordenadas por prioridad y considerando las relaciones de precedencia.
+
+Los algoritmos principales utilizados en el programa son:
+
+- `agregarTarea`: Crea una nueva instancia de la estructura Tarea, la llena con los datos proporcionados y la agrega tanto al montículo binario como al mapa hash.
+
+- `establecerPrecedencia`: Busca las dos tareas en el mapa hash y añade la primera tarea a la lista de precedentes de la segunda tarea.
+
+- `mostrarTareas`: Muestra todas las tareas pendientes ordenadas por prioridad y considerando las relaciones de precedencia. Utiliza funciones auxiliares como size, TareaslistaCapa, ordenarlista e imprimirlista para realizar la tarea de forma eficiente.
+
+- `marcarTareaComoCompletada`: Marca una tarea como completada y la elimina de la lista de tareas por hacer, si la tarea no tiene precedentes. Si la tarea tiene relaciones de precedencia, se muestra una advertencia y se solicita confirmación antes de eliminarla.
+
+- `eliminarPrecedente`: Elimina una relación de precedencia existente de una tarea. Recorre el mapa hash y los precedentes de cada tarea para encontrar y eliminar la relación.
+
+- `heap_eliminar`: Elimina un elemento específico del montículo binario.
+
+Estos algoritmos y estructuras de datos permiten una gestión eficiente de las tareas, considerando tanto las prioridades como las relaciones de precedencia entre ellas.
+
 ##  Funcionalidad
 El programa permite realizar las siguientes tareas:
 

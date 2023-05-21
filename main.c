@@ -264,7 +264,7 @@ int main() {
         printf("\n│ 1. Agregar tarea                                         │");
         printf("\n│ 2. Mostrar tareas                                        │");
         printf("\n│ 3. Establecer precedencia entre dos tareas               │");
-        printf("\n│ 4. Eliminar precedente de una tarea                      │");
+        printf("\n│ 4. Eliminar de los precedentes                           │");
         printf("\n│ 5. Marcar tarea como completada                          │");
         printf("\n│ 0. Salir                                                 │");
         printf("\n╰──────────────────────────────────────────────────────────╯");
@@ -285,10 +285,10 @@ int main() {
                 mostrarTareas( map);
                 break;
             case 3:
-                printf("Ingrese el nombre de la tarea 1: ");
+                printf("Ingrese el nombre de la tarea que se agregará a la lista de tareas precedentes: ");
                 fgets(tarea1, sizeof(tarea1), stdin);
                 tarea1[strcspn(tarea1, "\n")] = 0; 
-                printf("Ingrese el nombre de la tarea 2: ");
+                printf("Ingrese el nombre de la tarea a la cual pertenece la lista: ");
                 fgets(tarea2, sizeof(tarea2), stdin);
                 tarea2[strcspn(tarea2, "\n")] = 0; 
                 establecerPrecedencia(map, tarea1, tarea2);
