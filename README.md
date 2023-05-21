@@ -51,7 +51,7 @@ El programa permite realizar las siguientes tareas:
     
 3.  **Establecer precedencia entre dos tareas:** Permite establecer una relación de precedencia entre dos tareas existentes.
     
-4.  **Eliminar precedente de una tarea:** Permite eliminar una relación de precedencia existente de una tarea.
+4.  **Eliminar tarea de las listas de precedentes:** Permite eliminar una tarea de las listas de precedentes.
     
 5.  **Marcar tarea como completada:** Permite marcar una tarea como completada. Si la tarea tiene relaciones de precedencia, se mostrará una advertencia.
     
