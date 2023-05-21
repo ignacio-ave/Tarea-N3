@@ -7,44 +7,6 @@
 #include <stdbool.h>
 
 
-/*
-struct HashMap {
-    Pair **buckets;
-    long size;     // cantidad de datos/pairs en la tabla
-    long capacity; // capacidad de la tabla
-    long current;  // indice del ultimo dato accedido
-};
-typedef struct Pair {
-    char * key;
-    void * value;
-} Pair;
-
-HashMap * createMap(long capacity);
-void insertMap(HashMap * table, char * key, void * value);
-void eraseMap(HashMap * table, char * key);
-Pair * searchMap(HashMap * table, char * key);
-Pair * firstMap(HashMap * table);
-Pair * nextMap(HashMap * table);
-void enlarge(HashMap * map);
-
----
-typedef struct nodo{
-   void* data;
-   int priority;
-}heapElem;
-
-typedef struct Heap{
-    heapElem* heapArray;
-    int size;
-    int capac;
-} Heap;
-
-Heap* createHeap();
-void* heap_top(Heap* pq);
-void heap_push(Heap* pq, void* data, int priority);
-void heap_pop(Heap* pq);
-
-*/
 typedef struct Tarea Tarea;
 
 typedef struct Tarea {
@@ -54,14 +16,6 @@ typedef struct Tarea {
     struct Tarea *precedentes[50];
     int numPrecedentes;
 } Tarea;
-
-
-// Cabecera de funciones
-void agregarTarea(Heap* heap, HashMap* map, char* nombre, int prioridad);
-void establecerPrecedencia(HashMap* map, char* tarea1, char* tarea2);
-void mostrarTareas(HashMap* map);
-void eliminarPrecedente(HashMap* map, char* nombre);
-void marcarTareaComoCompletada(Heap* heap, HashMap* map, char* nombre);
 
 
 
@@ -108,7 +62,7 @@ void establecerPrecedencia(HashMap* map, char* nombreTarea1, char* nombreTarea2)
 }
 
 
-// 3. Mostrar tareas por hacer: La aplicación muestra todas las tareas pendientes, ordenadas según su prioridad y teniendo en cuenta las relaciones de precedencia.
+// Mostrar tareas por hacer: La aplicación muestra todas las tareas pendientes, ordenadas según su prioridad y teniendo en cuenta las relaciones de precedencia.
 
 int size(List* list) {
     int count = 0;
@@ -134,6 +88,8 @@ List* TareaslistaCapa(HashMap* map, int n) {
     }
     return lista;
 }
+
+
 List * ordenarlista(List* list){
     List* listOrdenada = createList();
     Node* current = list->head;
@@ -159,7 +115,6 @@ List * ordenarlista(List* list){
         }
         pushBack(listOrdenada, nuevaTarea);
 
-        // Ahora necesitamos eliminar el nodo 'min' de la lista original
         if (min == current) {
             current = current->next;
         }
@@ -173,8 +128,6 @@ List * ordenarlista(List* list){
     }
     return listOrdenada;
 }
-
-
 
 void imprimirlista(List* list){
     Node* current = list->head;
@@ -219,7 +172,7 @@ void mostrarTareas(HashMap* map) {
 
 
 
-// 4. Marcar tarea como completada (nombre): La usuaria ingresa el nombre de una tarea. La aplicación marca la tarea como completada y la elimina de la lista de tareas por hacer. Si la tarea tiene relaciones de precedencia, se debe colocar una advertencia: “¿estás seguro que desea eliminar la tarea?”
+// Marcar tarea como completada (nombre): La usuaria ingresa el nombre de una tarea. La aplicación marca la tarea como completada y la elimina de la lista de tareas por hacer. Si la tarea tiene relaciones de precedencia, se debe colocar una advertencia: “¿estás seguro que desea eliminar la tarea?”
 void eliminarPrecedente(HashMap* map, char* nombre) {
     Pair* pair = firstMap(map);
     while(pair != NULL) {
@@ -295,7 +248,6 @@ int main() {
     Heap* heap = createHeap();
     HashMap* map = createMap(100);
     
-    // Variables que necesitaremos
     char nombre[50];
     char tarea1[50];
     char tarea2[50];
