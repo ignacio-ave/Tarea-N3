@@ -3,15 +3,22 @@
 Este es un simple programa en C que permite manejar una lista de tareas. Las tareas pueden tener prioridades y relaciones de precedencia, lo que permite organizar de forma eficiente las actividades que deben llevarse a cabo.
 ## Compilación y Ejecución
 
-  
+1. Descarge y entre al archivo:
 
-1. Compile el archivo con el siguiente comando:
+```{bash}
+git clone https://github.com/tu_usuario/tu_repositorio.git
+cd tu_repositorio 
+```
+
+2. Compile el archivo con el siguiente comando:
 
 ```{bash}
 gcc -o gestorTareas main.c heap.c hashmap.c list.c
 ```
+
 2.  Ejecute el programa con el comando:
- ```{bash}
+
+```{bash}
 	./gestorTareas
 ```
 
