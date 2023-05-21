@@ -40,6 +40,11 @@ void establecerPrecedencia(HashMap* map, char* nombreTarea1, char* nombreTarea2)
     nombreTarea1[strcspn(nombreTarea1, "\n")] = '\0';
     nombreTarea2[strcspn(nombreTarea2, "\n")] = '\0';
 
+    if(strcmp(nombreTarea1, nombreTarea2) == 0) {
+        printf("Error: Las tareas no pueden tenerse a sí mismas como precedentes.\n");
+        return;
+    }
+    
     Pair* pairTarea1 = searchMap(map, nombreTarea1);
     Pair* pairTarea2 = searchMap(map, nombreTarea2);
 
@@ -49,6 +54,8 @@ void establecerPrecedencia(HashMap* map, char* nombreTarea1, char* nombreTarea2)
     }
 
     if (pairTarea2) {
+
+
         Tarea* tarea1 = (Tarea*)pairTarea1->value;
         Tarea* tarea2 = (Tarea*)pairTarea2->value;
         if (tarea2->numPrecedentes < 50) {
@@ -133,12 +140,12 @@ void imprimirlista(List* list){
     Node* current = list->head;
     while(current != NULL) {
         Tarea* tarea = (Tarea*)current->data;
-        printf("Tarea: %s\n", tarea->nombre);
-        printf("Prioridad: %d\n", tarea->prioridad);
+        printf("Tarea: %s", tarea->nombre);
+        printf(" | Prioridad: %d", tarea->prioridad);
         if (tarea->numPrecedentes > 0){
-            printf("Tareas precedentes:\n");
+            printf(" | Tareas precedentes:");
             for (int i = 0; i < tarea->numPrecedentes; i++) {
-                printf("- %s\n", tarea->precedentes[i]->nombre);
+                printf("- %s", tarea->precedentes[i]->nombre);
             }
         }
         printf("\n");
