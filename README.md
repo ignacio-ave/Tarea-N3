@@ -6,8 +6,8 @@ Este es un simple programa en C que permite manejar una lista de tareas. Las tar
 1. Descarge y entre al archivo:
 
 ```{bash}
-git clone https://github.com/tu_usuario/tu_repositorio.git
-cd tu_repositorio 
+git clone https://github.com/ignacio-ave/Tarea-N3.git
+cd Tarea-N3
 ```
 
 2. Compile el archivo con el siguiente comando:
@@ -19,7 +19,7 @@ gcc -o gestorTareas main.c heap.c hashmap.c list.c
 2.  Ejecute el programa con el comando:
 
 ```{bash}
-	./gestorTareas
+./gestorTareas
 ```
 
 ## Estructuras y algoritmos
